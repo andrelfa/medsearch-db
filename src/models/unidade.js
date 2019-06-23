@@ -27,8 +27,12 @@ const Unidade = mongoose.model('Unidade', {
     img: {
         type: String,
         required: true
-    }   
-    
+    },
+    endereco: {
+        type: String,
+        required: true,
+        trim: true
+    },
 })
 
 module.exports = Unidade

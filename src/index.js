@@ -3,6 +3,7 @@ require('./db/mongoose')
 const User = require('./models/user')
 const Task = require('./models/task')
 const Unidade = require('./models/unidade')
+const bodyParser = require('body-parser')
 
 const app = express()
 const port = process.env.PORT || 3001
@@ -26,6 +27,11 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
 
 app.post('/users', (req, res) => {
     const user = new User(req.body)
@@ -73,7 +79,7 @@ app.post('/unidade', (req, res) => {
     const unidade = new Unidade(req.body)
 
     unidade.save().then(() => {
-        res.status(201).send(task)
+        res.status(201).send(unidade)
     }).catch((e) => {
         res.status(400).send(e)
     })
