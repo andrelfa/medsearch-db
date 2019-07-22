@@ -44,7 +44,8 @@ app.post('/unidade', (req, res) => {
 })
 
 app.get('/unidade', (req, res) => {
-    Unidade.find({}).then((unidades) => {
+    console.log('params', req.query);
+    Unidade.find({"nome" : { '$regex' : req.query.nome, '$options' : 'i' }}).then((unidades) => {
         res.send(unidades);
     }).catch((e) => {
         res.status(500).send()
