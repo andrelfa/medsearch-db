@@ -3,6 +3,10 @@ require('./db/mongoose')
 const User = require('./models/user')
 const Task = require('./models/task')
 const Unidade = require('./models/unidade')
+const Estado = require('./models/estado')
+const Cidade = require('./models/cidade')
+const Plano = require('./models/plano')
+const Especialidade = require('./models/especialidade')
 const bodyParser = require('body-parser')
 
 const app = express()
@@ -45,11 +49,46 @@ app.post('/unidade', (req, res) => {
 
 app.get('/unidade', (req, res) => {
     console.log('params', req.query);
-    Unidade.find({"nome" : { '$regex' : req.query.nome, '$options' : 'i' }}).then((unidades) => {
+    Unidade.find({
+      // "nome" : { '$regex' : req.query.nome, '$options' : 'i' }
+      "planos_atendidos" : { $in : req.query.planos.split(',') }
+    }).then((unidades) => {
         res.send(unidades);
     }).catch((e) => {
         res.status(500).send()
     })
+})
+
+app.get('/estado', (req, res) => {
+  Estado.find({}).then((estados) => {
+      res.send(estados);
+  }).catch((e) => {
+      res.status(500).send()
+  })
+})
+
+app.get('/cidade', (req, res) => {
+  Cidade.find({}).then((cidades) => {
+      res.send(cidades);
+  }).catch((e) => {
+      res.status(500).send()
+  })
+})
+
+app.get('/especialidade', (req, res) => {
+  Especialidades.find({}).then((especialidades) => {
+      res.send(especialidades);
+  }).catch((e) => {
+      res.status(500).send()
+  })
+})
+
+app.get('/plano', (req, res) => {
+  Plano.find({}).then((planos) => {
+      res.send(planos);
+  }).catch((e) => {
+      res.status(500).send()
+  })
 })
 
 app.get('/unidade/:id', (req, res) => {
