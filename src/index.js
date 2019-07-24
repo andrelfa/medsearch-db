@@ -50,8 +50,10 @@ app.post('/unidade', (req, res) => {
 app.get('/unidade', (req, res) => {
     console.log('params', req.query);
     Unidade.find({
-      // "nome" : { '$regex' : req.query.nome, '$options' : 'i' }
-      "planos_atendidos" : { $in : req.query.planos.split(',') }
+      '$and': [
+        {"nome" : { '$regex' : req.query.nome, '$options' : 'i' }},
+        {"planos_atendidos" : { $in : req.query.planos.split(',') }}
+      ]
     }).then((unidades) => {
         res.send(unidades);
     }).catch((e) => {
@@ -76,7 +78,7 @@ app.get('/cidade', (req, res) => {
 })
 
 app.get('/especialidade', (req, res) => {
-  Especialidades.find({}).then((especialidades) => {
+  Especialidade.find({}).then((especialidades) => {
       res.send(especialidades);
   }).catch((e) => {
       res.status(500).send()
