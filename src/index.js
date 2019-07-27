@@ -49,12 +49,17 @@ app.post('/unidade', (req, res) => {
 
 app.get('/unidade', (req, res) => {
     console.log('params', req.query);
-    Unidade.find({
-      '$and': [
-        {"nome" : { '$regex' : req.query.nome, '$options' : 'i' }},
-        {"planos_atendidos" : { $in : req.query.planos.split(',') }}
-      ]
-    }).then((unidades) => {
+    const { nome, planos, especialidades } = req.query;
+    let options = {
+      '$and': []
+    }
+    if (nome) options['$and'].push({"nome" : { '$regex' : req.query.nome, '$options' : 'i' }});
+    if (planos) options['$and'].push({"planos_atendidos" : { $in : req.query.planos.split(',') }});
+    if (especialidades) options['$and'].push({"especialidades_atendidas" : { $in : req.query.especialidades.split(',') }});
+
+    console.log('options', options['$and'])
+
+    Unidade.find(options).then((unidades) => {
         res.send(unidades);
     }).catch((e) => {
         res.status(500).send()
